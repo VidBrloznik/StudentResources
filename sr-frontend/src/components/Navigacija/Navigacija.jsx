@@ -8,19 +8,27 @@ function Navigacija() {
     const navbarStyle = {
         backgroundColor: '#345586',
         fontFamily: 'Arial',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        padding: '10px 0'
     };
 
     const navLinkStyle = {
-        color: 'white'
+        color: 'white',
+        margin: '0 10px'
+    };
+
+    const brandStyle = {
+        color: 'white',
+        marginLeft: '-40px',
+        textDecoration: 'none'
     };
 
     return (
         <>
-            <Navbar style={navbarStyle} variant="light" expand="md" className="mb-3">
+            <Navbar style={navbarStyle} variant="dark" expand="md" className="mb-3">
                 <Container>
                     <Navbar.Brand className="ms-4">
-                        <Link className="text-dark" to="/" style={{ color: 'white', marginLeft: '-40px', textDecoration: 'none' }}>Student Resources</Link>
+                        <Link to="/" style={brandStyle}>Student Resources</Link>
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
