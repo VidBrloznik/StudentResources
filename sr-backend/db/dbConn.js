@@ -22,6 +22,7 @@ class Database {
             }
         });
     }
+
     query(sql, params = []) {
         return new Promise((resolve, reject) => {
             this.conn.query(sql, params, (err, res) => {
@@ -34,8 +35,20 @@ class Database {
         });
     }
 
-    async sampleQuery(sample_param) {
-        return this.query(`SELECT * FROM Sample WHERE param = ?`, [sample_param]);
+    async authUser(email) {
+        return this.query('SELECT * FROM Uporabnik WHERE email = ?', [email]);
+    }
+
+    async registerUser(ime, priimek, email, geslo, vloga, fakulteta) {
+        const hashedPassword = await bcrypt.hash(geslo, saltRounds);
+        return this.query(
+            `INSERT INTO Delavec (ime, priimek, email, geslo, vloga, fakulteta) VALUES (?,?,?,?,?,?)`,
+            [ime, priimek, email, hashedPassword, vloga, fakulteta]
+        );
+    }
+
+    async deleteUser(email) {
+        return this.query(`DELETE FROM User WHERE email = ?`, email);
     }
 
 }
