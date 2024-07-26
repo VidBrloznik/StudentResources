@@ -36,21 +36,26 @@ class Database {
     }
 
     async authUser(email) {
-        return this.query('SELECT * FROM Uporabnik WHERE email = ?', [email]);
+        return this.query('SELECT * FROM Uporabnik WHERE Email = ?', [email]);
     }
 
     async registerUser(ime, priimek, email, geslo, vloga, fakulteta) {
         const hashedPassword = await bcrypt.hash(geslo, saltRounds);
         return this.query(
-            `INSERT INTO Delavec (ime, priimek, email, geslo, vloga, fakulteta) VALUES (?,?,?,?,?,?)`,
+            `INSERT INTO Uporabnik (Ime, Priimek, Email, Geslo, Vloga, Fakulteta) VALUES (?,?,?,?,?,?)`,
             [ime, priimek, email, hashedPassword, vloga, fakulteta]
         );
     }
 
     async deleteUser(email) {
-        return this.query(`DELETE FROM User WHERE email = ?`, email);
+        return this.query(`DELETE FROM Uporabnik WHERE Email = ?`, email);
+    }
+
+    async getPredmeti() {
+        return this.query(`SELECT * FROM Predmeti`);
     }
 
 }
-
+const db = new Database();
+db.connect();
 module.exports = new Database();
