@@ -28,7 +28,7 @@ const Register = () => {
         e.preventDefault();
         console.log("Submitting form data:", formData);
         try {
-            const response = await axios.post(API_URL + '/api/register', formData);
+            const response = await axios.post(API_URL + '/auth/registracija', formData, { withCredentials: true, timeout: 20000 });
             setAlert({ type: 'success', message: response.data.message });
         } catch (error) {
             console.error("Registration error:", error.response?.data || error.message);
