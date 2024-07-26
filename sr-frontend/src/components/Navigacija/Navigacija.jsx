@@ -7,7 +7,6 @@ function Navigacija() {
 
     const navbarStyle = {
         backgroundColor: '#345586',
-        fontFamily: 'Arial',
         fontWeight: 'bold',
         padding: '10px 0'
     };
