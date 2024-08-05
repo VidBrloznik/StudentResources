@@ -32,8 +32,8 @@ function Navigacija() {
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav className="ml-auto">
                         <Nav.Link as={Link} to="/" style={navLinkStyle}>Home</Nav.Link>
-                        <Nav.Link as={Link} to="/profile" style={navLinkStyle}>Profile</Nav.Link>
-                        <Nav.Link as={Link} to="/subjects" style={navLinkStyle}>Subjects</Nav.Link>
+                        <Nav.Link as={Link} to="/profil" style={navLinkStyle}>Profil</Nav.Link>
+                        <Nav.Link as={Link} to="/predmeti" style={navLinkStyle}>Predmeti</Nav.Link>
                         <Nav.Link as={Link} to="/login" style={navLinkStyle}>Login</Nav.Link>
                         <Nav.Link as={Link} to="/register" style={navLinkStyle}>Register</Nav.Link>
                     </Nav>
