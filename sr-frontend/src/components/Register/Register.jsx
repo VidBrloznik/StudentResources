@@ -10,6 +10,7 @@ const Register = () => {
         priimek: "",
         email: "",
         geslo: "",
+        potrdiGeslo: "",
         vloga: "",
         fakulteta: ""
     });
@@ -26,6 +27,12 @@ const Register = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (formData.geslo !== formData.potrdiGeslo) {
+            setAlert({ type: 'danger', message: 'Geslo in potrdi geslo se ne ujemata' });
+            return;
+        }
+
         console.log("Submitting form data:", formData);
         try {
             const response = await axios.post(API_URL + '/auth/registracija', formData, { withCredentials: true, timeout: 20000 });
@@ -82,6 +89,17 @@ const Register = () => {
                                 type="password"
                                 name="geslo"
                                 value={formData.geslo}
+                                onChange={handleChange}
+                                required
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formPotrdiGeslo">
+                            <Form.Label>Potrdi geslo</Form.Label>
+                            <Form.Control
+                                type="password"
+                                name="potrdiGeslo"
+                                value={formData.potrdiGeslo}
                                 onChange={handleChange}
                                 required
                             />

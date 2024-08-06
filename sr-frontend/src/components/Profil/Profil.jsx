@@ -6,10 +6,9 @@ const Profile = () => {
     const { getUser } = useContext(UserContext);
 
     if (!getUser) {
-        return <div>Loading...</div>;  // Ali pa ustrezno sporočilo o napaki
+        return <div>Loading...</div>;
     }
 
-    // Za zdaj uporabimo nekaj primerov podatkov, kasneje jih lahko pridobimo iz APIja ali baze podatkov.
     const subjects = [
         { id: 1, name: "Programiranje 1" },
         { id: 2, name: "Matematika 2" },

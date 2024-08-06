@@ -1,7 +1,6 @@
 .subject-card {
     border-radius: 10px;
     background-color: rgba(173, 216, 230, 0.2);
-    /* Bledo modra */
     transition: transform 0.2s;
 }
 
@@ -9,30 +8,30 @@
     transform: scale(1.05);
 }
 
-/* Različne bledo barve */
+
 .subject-card:nth-child(6n+1) {
     background-color: rgba(173, 216, 230, 0.2);
-    /* Bledo modra */
+
 }
 
 .subject-card:nth-child(6n+2) {
     background-color: rgba(144, 238, 144, 0.2);
-    /* Bledo zelena */
+
 }
 
 .subject-card:nth-child(6n+3) {
     background-color: rgba(255, 182, 193, 0.2);
-    /* Bledo roza */
+
 }
 
 .subject-card:nth-child(6n+4) {
     background-color: rgba(255, 255, 224, 0.2);
-    /* Bledo rumena */
+
 }
 
 .subject-card:nth-child(6n+5) {
     background-color: rgba(221, 160, 221, 0.2);
-    /* Bledo vijolična */
+
 }
 
 .subject-card:nth-child(6n) {

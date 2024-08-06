@@ -1,6 +1,7 @@
 const mysql = require('mysql2');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const express = require("express")
 
 class Database {
     constructor() {

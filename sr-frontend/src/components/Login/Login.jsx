@@ -17,7 +17,6 @@ const Login = () => {
             });
 
             console.log("Login response:", response.data);
-            // Handle successful login here, e.g., save token, redirect user, etc.
         } catch (error) {
             console.error("Login error:", error);
             setErrorMessage("Invalid email or password. Please try again.");
