@@ -6,7 +6,6 @@ const KomentarModal = ({ show, handleClose }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Tukaj lahko obdelate komentar
         console.log("Komentar:", komentar);
         handleClose();
     };

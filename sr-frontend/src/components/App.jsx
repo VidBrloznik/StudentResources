@@ -35,6 +35,15 @@ function App() {
         <Route path="/gradivo/:gradivoId" element={<Gradivo />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
+      {
+        !
+        true &&
+        <>
+          Debug:
+          <p />
+          User: {JSON.stringify(getUser)}
+        </>
+      }
     </UserContext.Provider>
   );
 }

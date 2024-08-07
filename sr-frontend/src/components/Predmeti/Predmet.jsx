@@ -10,7 +10,6 @@ const sampleData = {
             { id: 2, name: 'Matematične enačbe', description: 'Rešitve matematičnih enačb.' }
         ]
     },
-    // Dodajte podatke za druge predmete tukaj...
 };
 
 const Predmet = () => {

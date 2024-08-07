@@ -29,7 +29,7 @@ const Register = () => {
         e.preventDefault();
 
         if (formData.geslo !== formData.potrdiGeslo) {
-            setAlert({ type: 'danger', message: 'Geslo in potrdi geslo se ne ujemata' });
+            setAlert({ type: 'danger', message: 'Gesli se ne ujemata' });
             return;
         }
 
