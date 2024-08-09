@@ -28,7 +28,8 @@ const Login = () => {
                     user_id: response.data.user.UporabnikID,
                     user_name: response.data.user.Ime,
                     user_surname: response.data.user.Priimek,
-                    user_email: response.data.user.Email
+                    user_email: response.data.user.Email,
+                    fakulteta: response.data.user.Fakulteta
                 });
                 console.log('Trenutni uporabnik:', getUser.user_id);
                 navigate('/');

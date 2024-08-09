@@ -14,6 +14,7 @@ import { UserContext } from "../contexts/contexts";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
+
   const [getUser, setUser] = useState({
     loggedIn: false,
     user_id: "",
@@ -29,10 +30,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/datoteke" element={<Predmeti />} />
         <Route path="/predmeti" element={<Predmeti />} />
         <Route path="/profil" element={<Profil />} />
         <Route path="/predmeti/:predmetId" element={<Predmet />} />
         <Route path="/gradivo/:gradivoId" element={<Gradivo />} />
+        <Route path="/predmeti/:predmetId/gradiva" element={<Gradivo />} />
         <Route path="*" element={<h1>404</h1>} />
       </Routes>
       {
