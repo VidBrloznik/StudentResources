@@ -8,7 +8,7 @@ import Register from "./Register/Register";
 import Predmeti from "./Predmeti/Predmeti";
 import Predmet from "./Predmeti/Predmet";
 import Profil from "./Profil/Profil";
-import Gradivo from "./Gradivo/Gradivo";
+import Gradivo from './Gradivo/Gradivo';
 import { UserContext } from "../contexts/contexts";
 
 import "bootstrap/dist/css/bootstrap.min.css";

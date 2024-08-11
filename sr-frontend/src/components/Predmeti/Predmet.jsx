@@ -1,42 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import { Container, Card, Button, Alert, ListGroup, Form } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../utils/utils';
-import { useContext } from "react";
 import { UserContext } from "../../contexts/contexts";
+
 const Predmet = () => {
     const { predmetId } = useParams();
     const [subject, setSubject] = useState(null);
     const [materials, setMaterials] = useState([]);
-    const [alert, setAlert] = useState(null);
+    const [alert, setAlert] = useState(null); // State to manage alerts
     const [showForm, setShowForm] = useState(false);
     const [naslov, setNaslov] = useState('');
     const [opis, setOpis] = useState('');
     const [tipGradiva, setTipGradiva] = useState('Učbenik');
     const [file, setFile] = useState(null);
-    const { getUser, setUser } = useContext(UserContext);
+    const { getUser } = useContext(UserContext);
+    const navigate = useNavigate();
+
     // Function to fetch subject and materials data
     const fetchSubjectAndMaterials = async () => {
         try {
             const subjectUrl = `${API_URL}/api/predmeti/${predmetId}`;
             const materialsUrl = `${API_URL}/api/predmeti/${predmetId}/gradiva`;
 
-            // Fetch data in parallel
             const [subjectResponse, materialsResponse] = await Promise.all([
                 axios.get(subjectUrl, { withCredentials: true }),
                 axios.get(materialsUrl, { withCredentials: true })
             ]);
 
-            // Check if responses are successful
             if (subjectResponse.data.status.success) {
-                setSubject(subjectResponse.data.data); // Assuming subject data is under 'data'
+                setSubject(subjectResponse.data.data);
             } else {
                 setAlert({ type: 'danger', message: subjectResponse.data.status.msg });
             }
 
             if (materialsResponse.data.status.success) {
-                setMaterials(materialsResponse.data.data); // Assuming materials data is under 'data'
+                setMaterials(materialsResponse.data.data);
             } else {
                 setAlert({ type: 'danger', message: materialsResponse.data.status.msg });
             }
@@ -58,17 +58,17 @@ const Predmet = () => {
         e.preventDefault();
 
         if (!file) {
-            alert("Izberite datoteko.");
+            setAlert({ type: 'danger', message: "Please select a file." });
             return;
         }
 
         try {
-            // First, upload the file (Datoteka)
             const formData = new FormData();
             formData.append('file', file);
             formData.append('tip', file.type);
             formData.append('velikost', file.size);
 
+            // Upload the file and get the DatotekaID
             const fileResponse = await axios.post(`${API_URL}/api/datoteke`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -78,18 +78,20 @@ const Predmet = () => {
 
             const datotekaId = fileResponse.data.datotekaId;
 
-            // Then, create the new Gradivo
+            // Create the new Gradivo with the necessary details
             const gradivoData = {
-                naslov,
-                opis,
-                tip: tipGradiva,
-                datotekaId,
-                predmetId: predmetId,
-                avtorId: getUser.user_id, // Replace with the actual AvtorID
+                naslov,             // This is the title entered in the form
+                opis,               // This is the description entered in the form
+                tip: tipGradiva,    // The type selected in the form (e.g., Učbenik, Gradivo, Izpisek)
+                datotekaId: datotekaId,         // The ID of the newly created Datoteka
+                predmetId: predmetId,          // The ID of the current Predmet
+                avtorId: getUser.user_id, // The ID of the currently logged-in user
             };
 
+            // Send a POST request to create the new Gradivo
             await axios.post(`${API_URL}/api/gradiva`, gradivoData, { withCredentials: true });
-            alert("Gradivo uspešno dodano!");
+
+            setAlert({ type: 'success', message: "Gradivo successfully added!" });
 
             // Refresh the list of materials
             fetchSubjectAndMaterials();
@@ -101,8 +103,8 @@ const Predmet = () => {
             setFile(null);
             setShowForm(false);
         } catch (error) {
-            console.error("Napaka pri dodajanju gradiva:", error);
-            alert("Napaka pri dodajanju gradiva.");
+            console.error("Error adding Gradivo:", error);
+            setAlert({ type: 'danger', message: "Error adding Gradivo." });
         }
     };
 
@@ -116,7 +118,7 @@ const Predmet = () => {
                         <Card.Body>
                             <Card.Title>{subject.Naziv}</Card.Title>
                             <Card.Text>{subject.Opis}</Card.Text>
-                            <Button variant="primary" onClick={() => window.history.back()}>
+                            <Button variant="primary" onClick={() => navigate(-1)}>
                                 Nazaj
                             </Button>
                         </Card.Body>
@@ -127,9 +129,9 @@ const Predmet = () => {
                         <ListGroup>
                             {materials.map((material, index) => (
                                 <ListGroup.Item key={index}>
-                                    <a href={material.DatotekaID} target="_blank" rel="noopener noreferrer">
+                                    <Link to={`/gradivo/${material.GradivoID}`}>
                                         {material.Naslov}
-                                    </a>
+                                    </Link>
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>

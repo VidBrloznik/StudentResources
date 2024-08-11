@@ -17,3 +17,16 @@ export const UserProvider = ({ children }) => {
         </UserContext.Provider>
     );
 };
+
+export const PredmetProvider = ({ children }) => {
+    const [getPredmet, setPredmet] = useState({
+        predmet_id: null,
+        profesor_id: null
+    });
+
+    return (
+        <UserContext.Provider value={{ getPredmet, setPredmet }}>
+            {children}
+        </UserContext.Provider>
+    );
+};
