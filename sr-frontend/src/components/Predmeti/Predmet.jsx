@@ -69,7 +69,7 @@ const Predmet = () => {
             formData.append('velikost', file.size);
 
             // Upload the file and get the DatotekaID
-            const fileResponse = await axios.post(`${API_URL}/api/datoteke`, formData, {
+            const fileResponse = await axios.post(`${API_URL}/api/uploads`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

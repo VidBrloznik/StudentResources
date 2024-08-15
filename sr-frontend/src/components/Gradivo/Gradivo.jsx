@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import { Container, Card, Button, Alert, Form, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { API_URL } from "../../utils/utils";
+import { UserContext } from "../../contexts/contexts";
 
 const Gradivo = () => {
     const { gradivoId } = useParams();
     const [gradivo, setGradivo] = useState(null);
+    const [authorName, setAuthorName] = useState('');
     const [komentarji, setKomentarji] = useState([]);
     const [ocene, setOcene] = useState([]);
     const [alert, setAlert] = useState(null);
@@ -14,16 +16,23 @@ const Gradivo = () => {
     const [newComment, setNewComment] = useState('');
     const [newRating, setNewRating] = useState('');
     const [newRatingComment, setNewRatingComment] = useState('');
+    const { getUser } = useContext(UserContext);
+    const uporabnikID = getUser.user_id;
+    const [avtorID, setAvtor] = useState(null);
+    const [imeDatoteke, setFileName] = useState('');
+    const [datotekaId, setFileID] = useState(null);
 
     useEffect(() => {
         const fetchGradivo = async () => {
             try {
                 const response = await axios.get(`${API_URL}/api/gradiva/${gradivoId}`, { withCredentials: true });
                 console.log("Gradivo Response:", response.data);
-                if (response.data.status && response.data.status.success) {
-                    setGradivo(response.data);
+                if (response.data.status.success) {
+                    setGradivo(response.data.data);
+                    setAvtor(response.data.data.AvtorID);
+                    setFileID(response.data.data.DatotekaID);
                 } else {
-                    setAlert({ type: 'danger', message: response.data.status ? response.data.status.msg : "Unknown error." });
+                    setAlert({ type: 'danger', message: response.data.status.msg });
                 }
             } catch (error) {
                 console.error("Error fetching gradivo:", error);
@@ -61,7 +70,6 @@ const Gradivo = () => {
             }
         };
 
-        // Fetch all data concurrently
         const fetchData = async () => {
             setLoading(true);
             await Promise.all([fetchGradivo(), fetchKomentarji(), fetchOcene()]);
@@ -71,16 +79,73 @@ const Gradivo = () => {
         fetchData();
     }, [gradivoId]);
 
+    useEffect(() => {
+        const fetchFile = async () => {
+            if (datotekaId) {
+                try {
+                    const response = await axios.get(`${API_URL}/api/datoteke/${datotekaId}`, { withCredentials: true });
+                    console.log(`${API_URL}/api/datoteke/${datotekaId}`);
+                    if (response.data.status.success) {
+                        setFileName(response.data.data[0].ImeDatoteke);
+                        console.log(imeDatoteke);
+                    } else {
+                        setAlert({ type: 'danger', message: response.data.status.msg });
+                    }
+                } catch (error) {
+                    console.error("Error fetching file:", error);
+                    setAlert({ type: 'danger', message: "Error fetching file details." });
+                }
+            }
+        };
+
+        fetchFile();
+    }, [datotekaId]);
+
+    useEffect(() => {
+        const fetchAuthorName = async () => {
+            if (avtorID) {
+                try {
+                    const authorResponse = await axios.get(`${API_URL}/api/uporabnik/${avtorID}`, { withCredentials: true });
+                    console.log("Author Response:", authorResponse.data.data);
+                    if (authorResponse.data && authorResponse.data.data && authorResponse.data.data.Ime) {
+                        const user = authorResponse.data.data;
+                        setAuthorName(user.Ime + " " + user.Priimek);
+                    } else {
+                        console.warn("Unexpected author response format:", authorResponse.data);
+                        setAuthorName("Unknown Author");
+                    }
+                } catch (error) {
+                    console.error("Error fetching author's name:", error);
+                    setAuthorName("Unknown Author");
+                }
+            }
+        };
+
+        fetchAuthorName();
+    }, [avtorID]);
+
     const handleAddComment = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${API_URL}/api/gradiva/${gradivoId}/komentarji`, { vsebina: newComment }, { withCredentials: true });
-            if (response.data.status.success) {
-                setKomentarji([...komentarji, { Vsebina: newComment, CasObjave: new Date(), AvtorID: response.data.userId, KomentarID: response.data.newCommentId }]);
+            const response = await axios.post(
+                `${API_URL}/api/gradiva/${gradivoId}/komentarji/${uporabnikID}`,
+                { vsebina: newComment },
+                { withCredentials: true }
+            );
+            console.log(newComment);
+            if (response.data && response.data.status && response.data.status.success) {
+                setKomentarji([...komentarji, {
+                    Vsebina: newComment,
+                    CasObjave: new Date(),
+                    AvtorID: getUser.userID,
+                    KomentarID: response.data.newCommentId
+                }]);
                 setNewComment('');
                 setAlert({ type: 'success', message: 'Comment added successfully!' });
-            } else {
+            } else if (response.data && response.data.status) {
                 setAlert({ type: 'danger', message: response.data.status.msg });
+            } else {
+                setAlert({ type: 'danger', message: "Unexpected response format from server." });
             }
         } catch (error) {
             console.error("Error adding comment:", error);
@@ -91,9 +156,9 @@ const Gradivo = () => {
     const handleAddRating = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post(`${API_URL}/api/gradiva/${gradivoId}/ocene`, { ocena: newRating, komentar: newRatingComment }, { withCredentials: true });
+            const response = await axios.post(`${API_URL}/api/gradiva/${gradivoId}/ocene/${uporabnikID}`, { ocena: newRating, komentar: newRatingComment }, { withCredentials: true });
             if (response.data.status.success) {
-                setOcene([...ocene, { Ocena: newRating, Komentar: newRatingComment, AvtorID: response.data.userId, OcenaID: response.data.newRatingId }]);
+                setOcene([...ocene, { Ocena: newRating, Komentar: newRatingComment, AvtorID: uporabnikID, GradivoID: gradivoId }]);
                 setNewRating('');
                 setNewRatingComment('');
                 setAlert({ type: 'success', message: 'Rating added successfully!' });
@@ -106,7 +171,7 @@ const Gradivo = () => {
         }
     };
 
-    const getDownloadUrl = (datotekaId) => `${API_URL}/datoteke/download/${datotekaId}`;
+    const getDownloadUrl = (datotekaId) => `${API_URL}/uploads/download/${datotekaId}`;
 
     return (
         <Container>
@@ -122,8 +187,9 @@ const Gradivo = () => {
                     <Card className="mb-4">
                         <Card.Body>
                             <Card.Title>{gradivo.Naslov}</Card.Title>
-                            <Card.Text><strong>Avtor:</strong> {gradivo.AvtorID}</Card.Text>
+                            <Card.Text><strong>Avtor:</strong> {authorName}</Card.Text>
                             <Card.Text>{gradivo.Opis}</Card.Text>
+                            <Card.Text><strong>File Name:</strong> {imeDatoteke}</Card.Text>
                             <a
                                 href={getDownloadUrl(gradivo.DatotekaID)}
                                 className="btn btn-primary"
@@ -134,7 +200,6 @@ const Gradivo = () => {
                         </Card.Body>
                     </Card>
 
-                    {/* Komentarji Section */}
                     <Card className="mb-4">
                         <Card.Body>
                             <Card.Title>Komentarji</Card.Title>
@@ -152,7 +217,6 @@ const Gradivo = () => {
                         </Card.Body>
                     </Card>
 
-                    {/* Add Comment Form */}
                     <Card className="mb-4">
                         <Card.Body>
                             <Card.Title>Dodaj Nov Komentar</Card.Title>
@@ -174,7 +238,6 @@ const Gradivo = () => {
                         </Card.Body>
                     </Card>
 
-                    {/* Ocene Section */}
                     <Card className="mb-4">
                         <Card.Body>
                             <Card.Title>Ocene</Card.Title>
@@ -192,7 +255,6 @@ const Gradivo = () => {
                         </Card.Body>
                     </Card>
 
-                    {/* Add Rating Form */}
                     <Card className="mb-4">
                         <Card.Body>
                             <Card.Title>Dodaj Novo Oceno</Card.Title>
