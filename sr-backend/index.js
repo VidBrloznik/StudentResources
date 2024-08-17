@@ -6,7 +6,7 @@ const cors = require('cors');
 
 require("dotenv").config();
 const app = express()
-
+app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
     secret: process.env.COOKIE_SECRET,
@@ -20,7 +20,7 @@ app.use(session({
 
 app.use(cors(
     {
-        origin: ['*', 'http://localhost:3306'],
+        origin: ['*', 'http://localhost:3000'],
         methods: ['GET', 'POST', 'DELETE'],
         credentials: true,
         exposedHeaders: ['set-cookie']
@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'build')));
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.html')));

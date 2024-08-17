@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.11.0",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "sr-backend": "file:"
   }
 }
