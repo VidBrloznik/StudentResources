@@ -84,10 +84,10 @@ const Gradivo = () => {
             if (datotekaId) {
                 try {
                     const response = await axios.get(`${API_URL}/api/datoteke/${datotekaId}`, { withCredentials: true });
-                    console.log(`${API_URL}/api/datoteke/${datotekaId}`);
+                    console.log("File Response:", response.data);
                     if (response.data.status.success) {
                         setFileName(response.data.data[0].ImeDatoteke);
-                        console.log(imeDatoteke);
+                        console.log("File Name:", response.data.data[0].ImeDatoteke);
                     } else {
                         setAlert({ type: 'danger', message: response.data.status.msg });
                     }
@@ -132,7 +132,7 @@ const Gradivo = () => {
                 { vsebina: newComment },
                 { withCredentials: true }
             );
-            console.log(newComment);
+            console.log("New Comment:", newComment);
             if (response.data && response.data.status && response.data.status.success) {
                 setKomentarji([...komentarji, {
                     Vsebina: newComment,
@@ -157,6 +157,7 @@ const Gradivo = () => {
         event.preventDefault();
         try {
             const response = await axios.post(`${API_URL}/api/gradiva/${gradivoId}/ocene/${uporabnikID}`, { ocena: newRating, komentar: newRatingComment }, { withCredentials: true });
+            console.log("New Rating:", newRating, "Comment:", newRatingComment);
             if (response.data.status.success) {
                 setOcene([...ocene, { Ocena: newRating, Komentar: newRatingComment, AvtorID: uporabnikID, GradivoID: gradivoId }]);
                 setNewRating('');
@@ -171,7 +172,31 @@ const Gradivo = () => {
         }
     };
 
-    const getDownloadUrl = (datotekaId) => `${API_URL}/uploads/download/${datotekaId}`;
+    const handleDownload = async () => {
+        if (!datotekaId) {
+            console.error("No file ID found for download.");
+            setAlert({ type: 'danger', message: "No file available for download." });
+            return;
+        }
+        try {
+            const response = await axios.get(`${API_URL}/uploads/download/${datotekaId}`, {
+                responseType: 'blob',
+                withCredentials: true
+            });
+            console.log("Download Response:", response);
+
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', imeDatoteke || 'file.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            console.error("Error during file download:", error);
+            setAlert({ type: 'danger', message: "Error downloading the file." });
+        }
+    };
 
     return (
         <Container>
@@ -187,16 +212,15 @@ const Gradivo = () => {
                     <Card className="mb-4">
                         <Card.Body>
                             <Card.Title>{gradivo.Naslov}</Card.Title>
+                            <Card.Text><strong>Opis:</strong> {gradivo.Opis}</Card.Text>
+                            <Card.Text><strong>Objavljeno:</strong> {new Date(gradivo.CasObjave).toLocaleDateString()}</Card.Text>
                             <Card.Text><strong>Avtor:</strong> {authorName}</Card.Text>
-                            <Card.Text>{gradivo.Opis}</Card.Text>
-                            <Card.Text><strong>File Name:</strong> {imeDatoteke}</Card.Text>
-                            <a
-                                href={getDownloadUrl(gradivo.DatotekaID)}
-                                className="btn btn-primary"
-                                download
-                            >
-                                Prenesi Datoteko
-                            </a>
+                            {imeDatoteke && (
+                                <Button onClick={handleDownload} variant="primary">
+                                    Prenesi datoteko: {imeDatoteke}
+                                </Button>
+                            )}
+                            {!imeDatoteke && <p>Datoteka ni na voljo za prenos.</p>}
                         </Card.Body>
                     </Card>
 

@@ -20,13 +20,11 @@ const Profil = () => {
             }
 
             try {
-                // Fetch comments
                 const responseComments = await axios.get(`${API_URL}/api/komentarji/uporabnik/${uporabnikID}`, { withCredentials: true });
 
                 console.log("Komentarji Response:", responseComments.data);
                 setComments(responseComments.data.data || []);
 
-                // Fetch materials
                 const responseMaterials = await axios.get(`${API_URL}/api/gradiva/uporabnik/${uporabnikID}`, { withCredentials: true });
                 console.log("Gradivo Response:", responseMaterials.data);
                 setMaterials(responseMaterials.data.data || []);

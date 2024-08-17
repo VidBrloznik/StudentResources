@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Navbar, Nav, Container } from 'react-bootstrap';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { UserContext } from "../../contexts/contexts";
 
 function Navigacija() {
     const location = useLocation();
+    const navigate = useNavigate();
+    const { getUser, logout } = useContext(UserContext);
+    const user = getUser.user_id;
 
     const navbarStyle = {
         backgroundColor: '#345586',
@@ -22,6 +26,11 @@ function Navigacija() {
         textDecoration: 'none'
     };
 
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
     return (
         <Navbar style={navbarStyle} variant="dark" expand="md" className="mb-3">
             <Container>
@@ -32,10 +41,18 @@ function Navigacija() {
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav className="ml-auto">
                         <Nav.Link as={Link} to="/" style={navLinkStyle}>Home</Nav.Link>
-                        <Nav.Link as={Link} to="/profil" style={navLinkStyle}>Profil</Nav.Link>
-                        <Nav.Link as={Link} to="/predmeti" style={navLinkStyle}>Predmeti</Nav.Link>
-                        <Nav.Link as={Link} to="/login" style={navLinkStyle}>Login</Nav.Link>
-                        <Nav.Link as={Link} to="/register" style={navLinkStyle}>Register</Nav.Link>
+                        {user ? (
+                            <>
+                                <Nav.Link as={Link} to="/profil" style={navLinkStyle}>Profil</Nav.Link>
+                                <Nav.Link as={Link} to="/predmeti" style={navLinkStyle}>Predmeti</Nav.Link>
+                                <Nav.Link as={Link} onClick={handleLogout} style={navLinkStyle}>Logout</Nav.Link>
+                            </>
+                        ) : (
+                            <>
+                                <Nav.Link as={Link} to="/login" style={navLinkStyle}>Login</Nav.Link>
+                                <Nav.Link as={Link} to="/register" style={navLinkStyle}>Register</Nav.Link>
+                            </>
+                        )}
                     </Nav>
                 </Navbar.Collapse>
             </Container>

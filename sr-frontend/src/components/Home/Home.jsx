@@ -8,9 +8,9 @@ function Home() {
                 <Col>
                     <Card className="text-center">
                         <Card.Body>
-                            <Card.Title>Welcome to Student Resources</Card.Title>
+                            <Card.Title>Dobrodošli na platformi Student Resources</Card.Title>
                             <Card.Text>
-                                Student Resources is a platform designed to help students and instructors manage and interact with educational materials efficiently. Whether you're looking to create, share, or collaborate on study materials, we've got you covered!
+                                Student Resources je platforma, zasnovana za pomoč študentom in inštruktorjem pri upravljanju in interakciji z izobraževalnimi gradivi. Ne glede na to, ali želite ustvariti, deliti ali sodelovati pri študijskih materialih, vam stojimo ob strani!
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -20,9 +20,9 @@ function Home() {
                 <Col md={4}>
                     <Card className="mb-4">
                         <Card.Body>
-                            <Card.Title>Manage Your Profile</Card.Title>
+                            <Card.Title>Upravljajte svoj profil</Card.Title>
                             <Card.Text>
-                                Keep your profile up-to-date with the latest information. Customize your settings and manage your account with ease.
+                                Posodabljajte svoj profil z najnovejšimi informacijami. Prilagodite svoje nastavitve in enostavno upravljajte svoj račun.
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -30,9 +30,9 @@ function Home() {
                 <Col md={4}>
                     <Card className="mb-4">
                         <Card.Body>
-                            <Card.Title>Access Study Materials</Card.Title>
+                            <Card.Title>Dostop do študijskih gradiv</Card.Title>
                             <Card.Text>
-                                Browse and download study materials for your courses. Stay organized and on top of your studies.
+                                Brskajte in prenašajte študijska gradiva za svoje predmete. Bodite organizirani in na vrhu svojih študijev.
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -40,9 +40,9 @@ function Home() {
                 <Col md={4}>
                     <Card className="mb-4">
                         <Card.Body>
-                            <Card.Title>Engage with Instructors</Card.Title>
+                            <Card.Title>Sodelujte z inštruktorji</Card.Title>
                             <Card.Text>
-                                Communicate with your instructors, ask questions, and get the support you need to succeed in your courses.
+                                Komunicirajte z inštruktorji, postavljajte vprašanja in pridobite podporo, ki jo potrebujete za uspeh pri svojih predmetih.
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -52,9 +52,9 @@ function Home() {
                 <Col md={4}>
                     <Card className="mb-4">
                         <Card.Body>
-                            <Card.Title>Create and Share</Card.Title>
+                            <Card.Title>Ustvarjajte in delite</Card.Title>
                             <Card.Text>
-                                Create your own study materials and share them with your peers. Collaborate and learn together.
+                                Ustvarite lastna študijska gradiva in jih delite s svojimi vrstniki. Sodelujte in se učite skupaj.
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -62,9 +62,9 @@ function Home() {
                 <Col md={4}>
                     <Card className="mb-4">
                         <Card.Body>
-                            <Card.Title>Join Discussions</Card.Title>
+                            <Card.Title>Pridružite se razpravam</Card.Title>
                             <Card.Text>
-                                Participate in discussion forums and chat rooms. Share ideas, ask questions, and learn from others.
+                                Sodelujte v forumih za razprave in klepetalnicah. Delite ideje, postavljajte vprašanja in se učite od drugih.
                             </Card.Text>
                         </Card.Body>
                     </Card>
@@ -72,9 +72,9 @@ function Home() {
                 <Col md={4}>
                     <Card className="mb-4">
                         <Card.Body>
-                            <Card.Title>Stay Updated</Card.Title>
+                            <Card.Title>Ostanite obveščeni</Card.Title>
                             <Card.Text>
-                                Get the latest updates and announcements from your instructors. Never miss important information again.
+                                Prejemajte najnovejše posodobitve in obvestila od svojih inštruktorjev. Nikoli več ne zamudite pomembnih informacij.
                             </Card.Text>
                         </Card.Body>
                     </Card>

@@ -9,16 +9,17 @@ const Predmet = () => {
     const { predmetId } = useParams();
     const [subject, setSubject] = useState(null);
     const [materials, setMaterials] = useState([]);
-    const [alert, setAlert] = useState(null); // State to manage alerts
+    const [alert, setAlert] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [naslov, setNaslov] = useState('');
     const [opis, setOpis] = useState('');
     const [tipGradiva, setTipGradiva] = useState('Učbenik');
     const [file, setFile] = useState(null);
     const { getUser } = useContext(UserContext);
+    const [IDavtor, setID] = useState(null);
+    const [author, setAuthorName] = useState([]);
     const navigate = useNavigate();
 
-    // Function to fetch subject and materials data
     const fetchSubjectAndMaterials = async () => {
         try {
             const subjectUrl = `${API_URL}/api/predmeti/${predmetId}`;
@@ -30,7 +31,9 @@ const Predmet = () => {
             ]);
 
             if (subjectResponse.data.status.success) {
-                setSubject(subjectResponse.data.data);
+                const fetchedSubject = subjectResponse.data.data[0];
+                setSubject(fetchedSubject);
+                fetchProfesorData(fetchedSubject.ProfesorID);
             } else {
                 setAlert({ type: 'danger', message: subjectResponse.data.status.msg });
             }
@@ -46,6 +49,23 @@ const Predmet = () => {
         }
     };
 
+    const fetchProfesorData = async (profesorID) => {
+        try {
+            const profesorUrl = `${API_URL}/api/uporabniki/${profesorID}`;
+
+            const profesorResponse = await axios.get(profesorUrl, { withCredentials: true });
+
+            if (profesorResponse.data.status.success) {
+                setAuthorName(profesorResponse.data.data[0]);
+            } else {
+                setAlert({ type: 'danger', message: profesorResponse.data.status.msg });
+            }
+        } catch (error) {
+            console.error("Error fetching professor data:", error);
+            setAlert({ type: 'danger', message: 'Error fetching professor data' });
+        }
+    };
+    console.log(author);
     useEffect(() => {
         fetchSubjectAndMaterials();
     }, [predmetId]);
@@ -67,36 +87,27 @@ const Predmet = () => {
             formData.append('file', file);
             formData.append('tip', file.type);
             formData.append('velikost', file.size);
-
-            // Upload the file and get the DatotekaID
             const fileResponse = await axios.post(`${API_URL}/api/uploads`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
                 withCredentials: true
             });
-
             const datotekaId = fileResponse.data.datotekaId;
-
-            // Create the new Gradivo with the necessary details
             const gradivoData = {
-                naslov,             // This is the title entered in the form
-                opis,               // This is the description entered in the form
-                tip: tipGradiva,    // The type selected in the form (e.g., Učbenik, Gradivo, Izpisek)
-                datotekaId: datotekaId,         // The ID of the newly created Datoteka
-                predmetId: predmetId,          // The ID of the current Predmet
-                avtorId: getUser.user_id, // The ID of the currently logged-in user
+                naslov,
+                opis,
+                tip: tipGradiva,
+                datotekaId: datotekaId,
+                predmetId: parseInt(predmetId, 10),
+                avtorId: getUser.user_id,
             };
-
-            // Send a POST request to create the new Gradivo
-            await axios.post(`${API_URL}/api/gradiva`, gradivoData, { withCredentials: true });
-
+            console.log(gradivoData);
+            await axios.post(`${API_URL}/api/gradiva`, gradivoData, {
+                withCredentials: true
+            });
             setAlert({ type: 'success', message: "Gradivo successfully added!" });
-
-            // Refresh the list of materials
             fetchSubjectAndMaterials();
-
-            // Reset the form
             setNaslov('');
             setOpis('');
             setTipGradiva('Učbenik');
@@ -108,6 +119,7 @@ const Predmet = () => {
         }
     };
 
+
     return (
         <Container>
             <h2 className="text-center my-4">Podrobnosti o predmetu</h2>
@@ -118,6 +130,9 @@ const Predmet = () => {
                         <Card.Body>
                             <Card.Title>{subject.Naziv}</Card.Title>
                             <Card.Text>{subject.Opis}</Card.Text>
+                            {author && (
+                                <Card.Text><strong>Avtor:</strong> {author.Ime} {author.Priimek}</Card.Text>
+                            )}
                             <Button variant="primary" onClick={() => navigate(-1)}>
                                 Nazaj
                             </Button>
