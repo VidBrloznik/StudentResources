@@ -5,14 +5,15 @@ const express = require("express")
 const NOW = new Date();
 class Database {
     constructor() {
-        this.conn = mysql.createConnection({
-            host: process.env.DB_HOST,
-            port: process.env.DB_PORT || null,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_DATABASE
-        });
-    }
+    this.conn = mysql.createConnection({
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_DATABASE
+    });
+}
+
 
     connect() {
         this.conn.connect((error) => {

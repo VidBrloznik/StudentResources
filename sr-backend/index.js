@@ -18,6 +18,8 @@ app.use(session({
     }
 }));
 
+
+
 app.use(cors(
     {
         origin: ['*', 'http://localhost:3000'],
@@ -38,5 +40,6 @@ app.use('/', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.htm
 
 app.listen(process.env.PORT, () => {
     console.log('Server is running on port: ' + process.env.PORT);
+    
 });
 
