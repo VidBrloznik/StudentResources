@@ -9,7 +9,7 @@ const app = express()
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
-    secret: process.env.COOKIE_SECRET,
+    secret: 'saunik',
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -38,8 +38,8 @@ app.use('/api', require('./routes/api'));
 app.use('/auth', require('./routes/auth'));
 app.use('/', (req, res) => res.sendFile(path.join(__dirname, 'build', 'index.html')));
 
-app.listen(process.env.PORT, () => {
-    console.log('Server is running on port: ' + process.env.PORT);
+app.listen(3000, () => {
+    console.log('Server is running on port: ' + 3000);
     
 });
 
